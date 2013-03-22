@@ -1,0 +1,531 @@
+---
+title: Ruby
+author: Anton Holmgren
+layout: slide
+---
+
+<section class="slide">
+  <h2>Uttryck</h2>
+    {% highlight ruby %}
+      (a + b - 1) * c / d
+      (a and b) or c
+      (a && b) || c
+    {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Vad är sant/falskt ?</h2>
+  <ul>
+    <li>nil och false är falska värden</li>
+    <li>Alla andra är sanna</li>
+  </ul>
+  {% highlight ruby %}
+    if 0
+      true
+    else
+      false
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Variabler</h2>
+  {% highlight ruby %}
+    normal_variable
+    $global_variable
+    @instance_variable
+    @@class_variable
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Konventioner</h2>
+  <ul>
+    <li>
+      Konstanter (<code>Constant</code>) har första bokstaven som versal
+    </li>
+    <li>
+      <code>CamelCase</code> till klasser
+    </li>
+    <li>
+      <code>snake_case</code> till variabler och metoder
+    </li>
+    <li>
+      <code>String#downcase</code>  refererar till metoden downcase på typen String.
+    </li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Symboler (<code>:symbol</code>)</h2>
+  <ul>
+    <li>Är inte garbage collectad</li>
+    <li>Undvik String#to_sym (minneslucka)</li>
+  </ul>
+
+  {% highlight ruby %}
+    :my_symbol.object_id == 
+      :my_symbol.object_id 
+    #=> true
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Allt har ett värde </h2>
+  {% highlight ruby %}
+    a = 10
+    b = 11
+    var = if a < b
+      true
+    else
+      false
+    end
+
+    var #=> true
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Allt har ett värde </h2>
+  {% highlight ruby %}
+    factory = case type
+      when :mustang
+        MustangFactory.new
+      when :porsche
+        PorscheFactory.new
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Funktioner</h2>
+  {% highlight ruby %}
+    def fib(n)
+      if n <= 1
+        n
+      else
+        fib(i-1) + fib(i-2)
+      end
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Klasser</h2>
+  {% highlight ruby %}
+    class MyClass 
+      def foo
+        bar
+      end
+
+      private
+      def bar
+        "bar"
+      end
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Arv</h2>
+  {% highlight ruby %}
+    class Base
+    end
+
+    class Derived < Base
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Konstruktor / instansvariabler</h2>
+  {% highlight ruby %}
+    class MyClass
+      def initialize
+        @foo = "foo"
+      end
+
+      def foo
+        @foo
+      end
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Vem orkar skriva getters/setters ?</h2>
+  {% highlight ruby %}
+    class MyClass
+      attr_reader :foo
+      attr_writer :bar
+      attr_accessor :foobar
+
+      def initialize
+        @foo = "foo"
+      end
+    end
+
+    a = MyClass.new
+    a.foo #=> "foo"
+    a.bar = "bar" #=> "bar"
+    a.foobar = "foobar" #=> "foobar"
+    a.foobar #=> "foobar"
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Klassmetoder</h2>
+  {% highlight ruby %}
+    class Foo
+      def self.bar
+        "bar"
+      end
+
+      def Foo.baz
+        "baz"
+      end
+
+      class << self
+        def foobar
+          "foobar"
+        end
+      end
+    end
+    Foo.bar #=> "bar"
+    Foo.baz #=> "baz"
+    Foo.foobar #=> "foobar"
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Klassvariabler (är delade)</h2>
+  {% highlight ruby %}
+    class Foo
+      def initialize
+        @@bar ||= 0
+        @@bar += 1
+      end
+
+      def bar
+        @@bar
+      end
+    end
+    Foo.new
+    Foo.new.bar #=> 2
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Klasser är öppna</h2>
+  {% highlight ruby %}
+    class Integer
+      def hours
+        self * 3600
+      end
+    end
+
+    Time.mktime(2006, 01, 01) + 14.hours
+    # => 2006-01-01 14:00:00 +0100
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Klasser är objekt</h2>
+  {% highlight ruby %}
+    MyClass = Class.new do 
+      def foo
+        "foo"
+      end
+    end
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Block / procs och lambdas</h2>
+  <ul>
+    <li>Varje metod har ett block</li>
+    <li><code>block_given?</code> ger sant om ett block var givet</li>
+    <li><code>yield</code> kallar blocket</li>
+    <li><code>&</code> operatorn förvandlar implicita block till explicit och explecita till implecita</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Varje metod har ett block</h2>
+
+  {% highlight ruby %}
+    def foo
+      if block_given?
+        yield
+      else
+        "no block"
+      end
+    end
+
+    foo #=> "no block"
+    foo { "my block" } #=> "my block"
+    foo do 
+      "my block"
+    end
+    #=> "my block"
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Block med argument</h2>
+  {% highlight ruby %}
+    def foo 
+      yield "with arguments"
+    end
+    foo { |arg| arg } #=> "with arguments"
+    foo do |arg|
+      arg
+    end
+    #=> "with arguments"
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Procs och lambdas</h2>
+  {% highlight ruby %}
+    proc1 = Proc.new { "proc1" }
+    proc2 = proc { "proc2" }
+    
+    lambda1 = lambda { "lambda1" }
+    lambda2 = -> { "lambda2"}
+
+    proc1.call #=> "proc1"
+    proc2.call #=> "proc2"
+    
+    lambda1.call #=> "lambda1"
+    lambda2.call #=> "lambda2"
+  {% endhighlight %}
+</section>
+
+
+<section class="slide">
+  <h2>Procs och lambdas</h2>
+  <ul>
+    <li>Är väldigt lika</li>
+    <li><code>lambda</code> kollar aritet</code></li>
+    <li>går ej att göra return i en <code>Proc</code></li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2><code>&</code> operatorn</h2>
+  {% highlight ruby %}
+    class MyClass
+      def register_callback(&block)
+        @callbacks ||= []
+        @callbacks << block
+      end
+
+      def update
+        @callbacks.each { |callback| callback.call }
+      end
+    end
+
+    obj = MyClass.new
+    obj.register_callback do 
+      puts "my callback"
+    end
+
+    callback = -> { puts "my other callback" }
+    obj.register_callback &callback
+
+    obj.update 
+    # > my callback
+    # > my other callback
+  {% endhighlight%}
+</section>
+
+<section class="slide">
+  <h2>Moduler</h2>
+  <ul>
+    <li>Likt multipelt arv (fast snyggt!)</li>
+  </ul>
+  <ul>
+    <li>Sätt att dela funktionalitet mellan klasser</li>
+  </ul>
+  <ul>
+    <li>Standardexempel <code>Enumerable</code></li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Dina egna objekt kan bete sig som enumerable</h2>
+  {% highlight ruby %}
+    class MyClass
+      include Enumerable
+
+      def each
+        yield 1
+        yield 2
+        yield 3
+      end
+    end
+    MyClass.new.map { |value| value*3} #=> [3, 6, 9]
+    MyClass.new.inject { |value, sum| sum + value} #=> 6
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Include och extend</h2>
+  <ul>
+    <li>include ger modulens metoder till en instans av klassen</li>
+    <li>extend ger modulens metodel till klassen</li>
+  </ul>
+  {% highlight ruby %}
+    module Greetings
+      def say_hello
+        puts "Hello!"
+      end
+    end
+
+    class Human
+      include Greetings
+    end
+
+    Human.new.say_hello # => "Hello!"
+    Human.say_hello     # NoMethodError
+
+    class Robot
+      extend Greetings
+    end
+
+    Robot.new.say_hello # NoMethodError
+    Robot.say_hello     # => "Hello!"
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Moduler kallas av super (före basklass)</h2>
+  {% highlight ruby %}
+    module M1
+      def initialize
+        super
+        puts "M1"
+      end
+    end
+
+    module M2
+      def initialize
+        super
+        puts "M2"
+      end
+    end
+
+    class Base
+      include M1
+
+      def initialize
+        super
+        puts "Base"
+      end
+    end
+
+    class Derived < Base
+      include M2
+
+      def initialize
+        super
+        puts "Derived"
+      end
+    end
+
+    Derived.new
+    #> M1
+    #> Base
+    #> M2
+    #> Derived
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Operatorer</h2>
+  <ul>
+    <li>Bara syntaktiskt socker</li>
+    <li>Alla operatorer är vanliga metoder</li>
+  </ul>
+  {% highlight ruby %}
+    1 + 2 #=> 3
+    1.+(2) #=> 3
+
+    a = 1
+
+    a += 2
+    a = a.+(2)
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Förutom</h2>
+  <code>=, .., ..., !, not, &&, and, ||, or, !=, !~, ::</code>
+</section>
+
+<section class="slide">
+  <h2>Inbyggda reflections</h2>
+  {% highlight ruby %}
+    String.public_methods
+
+    obj = "my string"
+    obj.respond_to?(:to_s)
+
+    to_s = obj.method(:to_s)
+    to_s.call #=> "my string"
+
+    obj.public_send(:to_s) #=> "my string"
+
+    #const_get
+    #const_set
+    #ancestors
+    #instance_variable_get
+    #instance_variable_set
+    #included_modules
+    #osv...
+  {% endhighlight %}
+</section>
+
+<section class="slide">
+  <h2>Ekosystem</h2>
+  <ul>
+    <li>Rubygems (rubygems.org)</li>
+    <li>bundler  (gembundler.com)</li>
+    <li>Github</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Implementationer</h2>
+  <ul>
+    <li>MRI (defacto standard)</li>
+    <li>Jruby (JVM)</li>
+    <li>Rubinius (llvm)</li>
+    <li>Maglev (smalltalk, gemstone)</li>
+    <li>Topaz (RPython, ej komplett)</li>
+  </ul>
+
+  <h2>Ruby versionshanterare</h2>
+  <ul>
+    <li>Rbenv / ruby_build</li>
+    <li>RVM</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>och mycket mer ....</h2>
+  <ul>
+    <li>Metaprogrammering</li>
+    <li>Domän specifika språk (DSL)</li>
+  </ul>
+  En annan dag
+</section>
+
+<section class="slide">
+  <h2>Övningar</h2>
+  <ul>
+    <li>http://rubeque.com/</li>
+    <li>http://rubykoans.com/</li>
+  </ul>
+</section>
