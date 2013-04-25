@@ -1,0 +1,158 @@
+---
+title: Vagrant
+author: Anton Holmgren, Alexander Norström
+layout: slide
+---
+
+<section class="slide">
+  <h2>Utvecklingsmiljö</h2>
+  <ul>
+    <li>Problem (det funkar hos mig)</li>
+    <li>Installerat något paket som inte är listat som beroende</li>
+    <li>Alla utvecklare borde köra på samma miljö</li>
+    <li>Minimera repetativt arbete (varje utvecklare måste sätta upp sin egen)</li>
+  </ul>
+</section>
+
+
+<section class="slide">
+  <h2>(Naiv) Lösning</h2>
+  <ul>
+    <li>Virtuella maskiner</li>
+    <li>Gör en VM template</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Varför virtuella maskiner ?</h2>
+  <ul>
+    <li>Flera projekt</li>
+    <li>Flera maskiner per projekt (db, web, ...)</li>
+    <li>Liknande miljö som produktion</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>VirtualBox / VMware</h2>
+  <ul>
+    <li>Snapshots</li>
+    <li>Templates</li>
+    <li>Behöver något bättre ?</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Vagrant</h2>
+  <ul>
+    <li>Bas boxar</li>
+    <li>Provisionering</li>
+    <li>Upprepningsbar</li>
+    <li>Bygger på VirtualBox (från start)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Hanterar virtuella maskiner</h2>
+  <ul>
+    <li>Import</li>
+    <li>Startar</li>
+    <li>Sätter upp portar (ssh / http / whatever)</li>
+    <li>Sätter upp delade mappar</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Provisonering</h2>
+  <ul>
+    <li>Automatisk uppsättning av maskin(er)</li>
+    <li>Kan vara en serie skript som körs</li>
+    <li>Eller lite mer avancerat ....</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Provisionering i Vagrant</h2>
+  <ul>
+    <li>Shell</li>
+    <li>Chef (client / solo)</li>
+    <li>Puppet (agent / apply)</li>
+    <li>Ansible</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Vi använder Chef (solo)</h2>
+  <ul>
+    <li>Ingen speciell anledning</li>
+    <li>Ruby ;)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Chef</h2>
+  <ul>
+    <li>Kokböcker (cookbooks)</li>
+    <li>Recept</li>
+    <li>Attribut</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Attribut</h2>
+  <ul>
+    <li>Parametrar till recept</li>
+    <li>Tex. port för apache el mysql</li>
+    <li>Har defaultvärden</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Recept</h2>
+  <ul>
+    <li>Uppsätning instruktioner som ska utföras på server</li>
+    <li>Installera paket</li>
+    <li>Konfiguera webbserver</li>
+    <li>Sätt upp databas</li>
+    <li>....</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Filer / Mallar</h2>
+  <ul>
+    <li>Konfiguration tex. apache site</li>
+    <li>Erb</li>
+    <li>Använder data från attribut</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Idempotent</h2>
+  <ul>
+    <li>Varje körning ska ge samma resultat oavsett hur många gånger provisioneraren körs</li>
+    <li>Upprepningsbar</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Finns många färdiga kokböcker</h2>
+  <ul>
+    <li>
+      <a href="http://community.opscode.com/cookbooks">http://community.opscode.com/cookbooks</a>
+    </li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Exempel</h2>
+  <ul>
+    <li>Drunken code</li>
+    <li>
+      <a href="https://github.com/madengineers/drunken-code">https://github.com/madengineers/drunken-code</a>
+    </li>
+    <li>Recept som installerar dotfiles</li>
+    <li>
+      <a href="https://github.com/euronetics/chef_dotfiles">https://github.com/euronetics/chef_dotfiles</a>
+    </li>
+  </ul>
+</section>
